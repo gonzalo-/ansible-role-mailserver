@@ -1,0 +1,43 @@
+set queue compression
+
+set bounce warn-interval 1h, 6h, 2d
+set queue ttl 3d
+
+## PKI
+pki {{ domain }} cert		"/etc/ssl/{{ domain }}_fullchain.pem"
+pki {{ domain }} key		"/etc/ssl/private/{{ domain }}_private.pem"
+
+## Tables
+table aliases			file:/etc/mail/aliases
+table domains			file:/etc/mail/domains
+table passwd			passwd:/etc/mail/passwd
+table virtuals			file:/etc/mail/virtuals
+table blacklist-recipients	file:/etc/mail/blacklist-recipients
+
+## Limits
+set smtp max-message-size 50M
+
+## Ports
+listen on lo0
+listen on lo0 port 10028 tag DKIM_OUT
+listen on egress port 25 tls pki {{ domain }}
+listen on egress port 587 tls-require pki {{ domain }} auth <passwd>
+
+action "mda_with_virtuals" mda \
+	"/usr/local/bin/rspamc --mime --exec '/usr/local/libexec/dovecot/dovecot-lda -f %{sender} -d %{dest}'" \
+	virtual <virtuals> user vmail
+action "relay" relay helo {{ domain }}
+action "dkim" relay host smtp://127.0.0.1:10027
+
+## Block spammers
+match from any mail-from <blacklist-recipients> for domain <domains> reject
+
+# Accept mail sent from local server to a local account
+match from local for local action "mda_with_virtuals"
+
+match from any for domain <domains> action "mda_with_virtuals"
+
+match tag DKIM_OUT for any action "relay"
+
+match from local for any action dkim
+match auth from any for any action dkim

@@ -1,0 +1,9 @@
+passdb {
+	args = scheme=blf-crypt /etc/mail/passwd
+	driver = passwd-file
+}
+
+userdb {
+	args = uid=vmail gid=vmail home={{ mail_dir }}/%d/%n
+	driver = static
+}

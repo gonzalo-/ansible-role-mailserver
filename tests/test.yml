@@ -1,0 +1,7 @@
+---
+- hosts: localhost
+  gather_facts: true
+  become: True
+  become_method: doas
+  roles:
+    - ansible-rol-mailserver

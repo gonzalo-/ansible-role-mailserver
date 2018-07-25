@@ -1,0 +1,15 @@
+protocols = $protocols sieve
+
+service managesieve-login {
+	inet_listener sieve {
+	port = 4190
+	}
+	inet_listener sieve_deprecated {
+	port = 2000
+  }
+}
+
+protocol sieve {
+	managesieve_notify_capability = mailto
+	managesieve_sieve_capability = fileinto reject envelope encoded-character vacation subaddress comparator-i;ascii-numeric relational regex imap4flags copy include variables body enotify environment mailbox date index ihave duplicate mime foreverypart
+}

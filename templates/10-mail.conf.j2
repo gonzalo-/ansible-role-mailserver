@@ -1,0 +1,24 @@
+mail_home = {{ mail_dir }}/%d/%n
+mbox_write_locks = fcntl
+namespace inbox {
+	inbox = yes
+	location = maildir:{{ mail_dir }}/%d/%n/Maildir:LAYOUT=fs
+	mailbox Drafts {
+		special_use = \Drafts
+	}
+	mailbox Spam {
+		special_use = \Junk
+	}
+	mailbox Sent {
+		special_use = \Sent
+	}
+	mailbox "Sent Messages" {
+		special_use = \Sent
+	}
+	mailbox Trash {
+		special_use = \Trash
+	}
+	prefix =
+	separator = /
+}
+mmap_disable = yes

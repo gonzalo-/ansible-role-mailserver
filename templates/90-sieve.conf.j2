@@ -1,0 +1,9 @@
+plugin {
+	sieve = {{ mail_dir }}/%d/%n/%n.sieve
+	sieve_global_dir = /var/sieve
+	sieve_global_path = /var/sieve/global-default.sieve
+	sieve_extensions = +spamtest +spamtestplus
+	sieve_spamtest_status_type = score
+	sieve_spamtest_status_header = X-Spamd-Result: default: [[:alnum:]]+ \[(-?[[:digit:]]+\.[[:digit:]]+) / -?[[:digit:]]+\.[[:digit:]]+\]
+	sieve_spamtest_max_header    = X-Spamd-Result: default: [[:alnum:]]+ \[-?[[:digit:]]+\.[[:digit:]]+ / (-?[[:digit:]]+\.[[:digit:]]+)\]
+}

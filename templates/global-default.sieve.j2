@@ -1,0 +1,6 @@
+require ["fileinto", "envelope"];
+
+if header :is "X-Spam" "Yes" {
+    fileinto "Spam";
+    stop;
+}

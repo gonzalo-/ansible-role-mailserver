@@ -1,0 +1,28 @@
+# specify what address/port DKIMproxy should listen on
+listen    127.0.0.1:10027
+
+# specify what address/port DKIMproxy forwards mail to
+relay     127.0.0.1:10028
+
+# specify what domains DKIMproxy can sign for (comma-separated, no spaces)
+domain	  {{ domain }}
+
+# specify what signatures to add
+signature dkim(c=relaxed)
+signature domainkeys(c=nofws)
+
+# specify location of the private key
+# mkdir /etc/ssl/dkim && cd /etc/ssl/dkim
+# openssl genrsa -out {{ domain }}.key 1024
+# openssl rsa -in {{ domain }}.key -pubout -out {{ domain }}-public.key
+# 
+keyfile		/etc/ssl/dkim/{{ domain }}.key
+
+# specify the selector (i.e. the name of the key record put in DNS)
+selector  dkim
+
+# control how many processes DKIMproxy uses
+#  - more information on these options (and others) can be found by
+#    running `perldoc Net::Server::PreFork'.
+#min_servers 5
+#min_spare_servers 2
