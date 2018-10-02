@@ -21,6 +21,7 @@
 - sieve:
   name: sieve-global
   file: path=/var/sieve state=directory
+  group: vmail
 
 - name: Installing packages
   openbsd_pkg: name={{ item }} state=present
