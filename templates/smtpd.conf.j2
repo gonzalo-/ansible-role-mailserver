@@ -14,6 +14,7 @@ smtp max-message-size 50M
 
 ## Ports
 listen on lo0
+listen on lo0 port 10028 tag DKIM
 listen on egress tls pki {{ domain }} hostname \
 	{{ domain }}
 listen on egress smtps pki {{ domain }} hostname \
@@ -37,8 +38,11 @@ action "mda_with_virtuals" mda \
 
 action "relay" relay
 
+action "dkim_relay" relay host smtp://127.0.0.1:10027
+
 match from any mail-from <blacklist-recipients> for domain <domains> reject
 match for local action "mda_with_aliases"
 match from any for domain <domains> action "mda_with_virtuals"
-match from local for any action "relay"
-match auth from any for any action "relay"
+match tag DKIM for any action "relay"
+match from local for any action "dkim_relay"
+match auth from any for any action "dkim_relay"
