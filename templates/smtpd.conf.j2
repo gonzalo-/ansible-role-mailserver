@@ -41,7 +41,8 @@ action "relay" relay
 action "dkim_relay" relay host smtp://127.0.0.1:10027
 
 match from any mail-from <blacklist-recipients> for domain <domains> reject
-match for local action "mda_with_aliases"
+#match for local action "mda_with_aliases"
+match for local action "mda_with_virtuals"
 match from any for domain <domains> action "mda_with_virtuals"
 match tag DKIM for any action "relay"
 match from local for any action "dkim_relay"
