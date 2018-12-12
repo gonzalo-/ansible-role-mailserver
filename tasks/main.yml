@@ -50,6 +50,9 @@
 -  template: src=10-ssl.conf.j2 dest="/etc/dovecot/conf.d/10-ssl.conf" owner="root" group="wheel" mode="0644"
 -  template: src=auth-static.conf.ext.j2 dest="/etc/dovecot/conf.d/auth-static.conf.ext" owner="root" group="wheel" mode="0644"
 -  template: src=global-default.sieve.j2 dest="/var/sieve/global-default.sieve" owner="root" group="wheel" mode="0644"
+-  template: src=ip_whitelist.map.j2 dest="/etc/rspamd/local.d/ip_whitelist.map" owner="root" group="wheel" mode="0644"
+-  template: src=multimap.conf.j2 dest="/etc/rspamd/local.d/multimap.conf" owner="root" group="wheel" mode="0644"
+-  template: src=whitelist.sender.domain.map.j2 dest="/etc/rspamd/local.d/whitelist.sender.domain.map" owner="root" group="wheel" mode="0644"
 
 - blockinfile: |
       dest=/etc/login.conf backup=yes

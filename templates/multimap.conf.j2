@@ -1,0 +1,13 @@
+WHITELIST_SENDER_DOMAIN {
+	type = "from";
+	filter = "email:domain";
+	map = "/etc/rspamd/local.d/whitelist.sender.domain.map";
+	score = -20.0
+}
+
+IP_WHITELIST {
+	type = "ip";
+	prefilter = "true";
+	map = "/etc/rspamd/local.d/ip_whitelist.map";
+	action = "accept";
+}
