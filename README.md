@@ -60,13 +60,14 @@ installed.
 $ doas pkg_add ansible
 ...
 $ cd /tmp && mkdir ansible && cd ansible
-$ git clone https://gitlab.com/gonzalo-/ansible-role-mailserver
-Cloning into 'ansible-role-mailserver'...
-warning: redirecting to https://gitlab.com/gonzalo-/ansible-role-mailserver.git/
-remote: Counting objects: 200, done.
-remote: Total 200 (delta 0), reused 0 (delta 0)
-Receiving objects: 100% (200/200), 36.51 KiB | 1.83 MiB/s, done.
-Resolving deltas: 100% (87/87), done.
+$ cat ~/.ssh/config
+Host cvs.x61.sh
+	Port 2222
+	User anoncvs
+$ cvs -d anoncvs@cvs.x61.sh:/cvs checkout -P ansible-role-mailserver
+...
+...
+...
 $ mv ansible-role-mailserver gonzalo-.mailserver
 $ cat hosts
 test ansible_python_interpreter=/usr/local/bin/python2.7
@@ -82,7 +83,7 @@ $ cat mailserver.yml
    domain: 'foobar.com'
    mail_dir: '/var/vmail'
    mail_user: 'gonzalo'
-   release: '6.4'
+   release: '6.5'
    arch: 'amd64'
    installurl_mirror: 'https://fastly.cdn.openbsd.org/pub/OpenBSD/'
    pkg_path: 'https://fastly.cdn.openbsd.org/pub/OpenBSD/{{ release }}/packages/{{ arch }}/'
@@ -111,7 +112,7 @@ Example Playbook
    domain: 'foobar.com'
    mail_dir: '/var/vmail'
    mail_user: 'gonzalo'
-   release: '6.4'
+   release: '6.5'
    arch: 'amd64'
    installurl_mirror: 'https://fastly.cdn.openbsd.org/pub/OpenBSD/'
    pkg_path: 'https://fastly.cdn.openbsd.org/pub/OpenBSD/{{ release }}/packages/{{ arch }}/'
@@ -135,7 +136,7 @@ Note: This ONLY works with IMAP
 
 To enable, modify the following line in /etc/dovecot/conf.d/20-imap.conf:
 ```
-mail_plugins = $mail_plugins antispam
+mail_plugins = $mail_plugins imap_sieve
 ```
 
 Also edit /etc/dovecot/conf.d/90-plugin.conf if you want to enable more logging
