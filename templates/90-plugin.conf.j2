@@ -1,12 +1,18 @@
 plugin {
-	#antispam_verbose_debug = 1
-	antispam_backend = mailtrain
-	antispam_spam    = Spam
-	antispam_trash   = Trash
-	antispam_mail_sendmail = /usr/local/bin/rspamc
-	antispam_mail_spam     = learn_spam
-	antispam_mail_notspam  = learn_ham
-	antispam_mail_sendmail_args = -h;localhost:11334;-P;q1
-	antispam_pipe_program_spam_arg = learn_spam
-	antispam_pipe_program_notspam_arg = learn_ham
+	sieve_plugins = sieve_imapsieve sieve_extprograms
+
+	# From elsewhere to Spam folder
+	imapsieve_mailbox1_name = Spam
+	imapsieve_mailbox1_causes = COPY
+	imapsieve_mailbox1_before = file:/usr/local/lib/dovecot/sieve/report-spam.sieve
+
+	# From Spam folder to elsewhere
+	imapsieve_mailbox2_name = *
+	imapsieve_mailbox2_from = Spam
+	imapsieve_mailbox2_causes = COPY
+	imapsieve_mailbox2_before = file:/usr/local/lib/dovecot/sieve/report-ham.sieve
+
+	sieve_pipe_bin_dir = /usr/local/lib/dovecot/sieve
+
+	sieve_global_extensions = +vnd.dovecot.pipe +vnd.dovecot.environment
 }
