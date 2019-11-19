@@ -2,6 +2,21 @@
 pki {{ domain }} cert		"/etc/ssl/{{ domain }}_fullchain.pem"
 pki {{ domain }} key		"/etc/ssl/private/{{ domain }}_private.pem"
 
+## Filters
+filter check_dyndns phase connect match rdns regex { '.*\.dyn\..*', '.*\.dsl\..*' } \
+	disconnect "550 no residential connections"
+
+filter check_rdns phase connect match !rdns \
+	disconnect "550 no rDNS"
+
+filter check_fcrdns phase connect match !fcrdns \
+	disconnect "550 no FCrDNS"
+
+#filter senderscore \
+#	proc-exec "filter-senderscore -blockBelow 10 -junkBelow 70 -slowFactor 5000"
+
+filter rspamd proc-exec "filter-rspamd"
+
 ## Tables
 table aliases			file:/etc/mail/aliases
 table domains			file:/etc/mail/domains
@@ -13,21 +28,14 @@ table blacklist-recipients	file:/etc/mail/blacklist-recipients
 smtp max-message-size 50M
 
 ## Ports
-listen on lo0
-listen on lo0 port 10028 tag DKIM
-listen on egress tls pki {{ domain }} hostname \
-	{{ domain }}
-listen on egress smtps pki {{ domain }} hostname \
-	{{ domain }}
-## If you use neomutt as a client
-## on the same server as me you need
-## this rule
-listen on lo0 port submission tls-require pki {{ domain }} \
-	hostname {{ domain }} auth <passwd>
-##
-listen on egress port submission tls-require pki {{ domain }} \
-	hostname {{ domain }} auth <passwd>
+listen on all tls pki {{ domain }} hostname {{ domain }} \
+        filter { check_dyndns, check_rdns, check_fcrdns, rspamd }
+listen on all smtps pki {{ domain }} hostname {{ domain }} \
+        auth <passwd> filter rspamd
+listen on all port submission tls-require pki {{ domain }} \
+        hostname {{ domain }} auth <passwd> mask-src filter rspamd
 
+## Actions
 action "mda_with_aliases" mda \
 	"/usr/local/bin/rspamc --mime -e '/usr/local/libexec/dovecot/dovecot-lda -f %{sender} -d %{dest}'" \
 	alias <aliases> user vmail
@@ -36,14 +44,15 @@ action "mda_with_virtuals" mda \
 	"/usr/local/bin/rspamc --mime -e '/usr/local/libexec/dovecot/dovecot-lda -f %{sender} -d %{dest}'" \
 	virtual <virtuals> user vmail
 
+action "mda_without_rspamd" mda \
+	"/usr/local/libexec/dovecot/dovecot-lda -f %{sender} -d %{dest}" \
+	virtual <virtuals> user vmail
+
 action "relay" relay
 
-action "dkim_relay" relay host smtp://127.0.0.1:10027
-
 match from any mail-from <blacklist-recipients> for domain <domains> reject
-#match for local action "mda_with_aliases"
 match for local action "mda_with_virtuals"
+match auth from any for domain <domains> action "mda_without_rspamd"
 match from any for domain <domains> action "mda_with_virtuals"
-match tag DKIM for any action "relay"
-match from local for any action "dkim_relay"
-match auth from any for any action "dkim_relay"
+match from local for any action "relay"
+match auth from any for any action "relay"

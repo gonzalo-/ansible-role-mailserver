@@ -1,7 +1,7 @@
 Ansible role for a Mailserver
 =============================
 
-Ansible role to create a Mailserver on OpenBSD (>=6.4 & -current) with OpenSMTPD, Dovecot, DKIMProxy and Rspamd.
+Ansible role to create a Mailserver on OpenBSD (>=6.6 & -current) with OpenSMTPD, Dovecot and Rspamd.
 
 Requirements
 ------------
@@ -83,16 +83,17 @@ $ cat mailserver.yml
    domain: 'foobar.com'
    mail_dir: '/var/vmail'
    mail_user: 'gonzalo'
-   release: '6.5'
+   release: '6.6'
    arch: 'amd64'
    installurl_mirror: 'https://fastly.cdn.openbsd.org/pub/OpenBSD/'
    pkg_path: 'https://fastly.cdn.openbsd.org/pub/OpenBSD/{{ release }}/packages/{{ arch }}/'
    packages_list:
     - dovecot
     - dovecot-pigeonhole
-    - dkimproxy
-    - rspamd
     - opensmtpd-extras
+    - opensmtpd-filter-rspamd
+    - opensmtpd-filter-senderscore
+    - rspamd
 $ ansible-playbook -i hosts mailserver.yml
 ...MAGIC...
 $
@@ -119,9 +120,10 @@ Example Playbook
    packages_list:
     - dovecot
     - dovecot-pigeonhole
-    - dkimproxy
-    - rspamd
     - opensmtpd-extras
+    - opensmtpd-filter-rspamd
+    - opensmtpd-filter-senderscore
+    - rspamd
 ```
 
 Enable Spam Learning with Dovecot Antispam
