@@ -25,7 +25,8 @@ table virtuals			file:/etc/mail/virtuals
 table blacklist-recipients	file:/etc/mail/blacklist-recipients
 
 ## Limits
-smtp max-message-size 50M
+smtp ciphers "HIGH:!aNULL:!TLSv1:!MD5:!RC4:!GOST89MAC:@STRENGTH"
+smtp max-message-size 90M
 
 ## Ports
 listen on all tls pki {{ domain }} hostname {{ domain }} \

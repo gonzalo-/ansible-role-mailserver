@@ -1,12 +1,12 @@
 Ansible role for a Mailserver
 =============================
 
-Ansible role to create a Mailserver on OpenBSD (>=6.6 & -current) with OpenSMTPD, Dovecot and Rspamd.
+Ansible role to create a Mailserver on OpenBSD (>=6.8 & -current) with OpenSMTPD, Dovecot and Rspamd.
 
 Requirements
 ------------
 
-OpenBSD, Python 2.7 (on client machine) and 10 minutes.
+OpenBSD, Python 3 (on client machine) and 10 minutes.
 
 Notes
 -----
@@ -53,7 +53,7 @@ Example Ansible
 ---------------
 
 This example is for a remote setup, so ,,test'' is your future mailserver, you
-already put your ssh key on ,,test'' and this server already have python2.7 
+already put your ssh key on ,,test'' and this server already have python3.8
 installed.
 
 ```
@@ -70,7 +70,7 @@ $ cvs -d anoncvs@cvs.x61.sh:/cvs checkout -P ansible-role-mailserver
 ...
 $ mv ansible-role-mailserver gonzalo-.mailserver
 $ cat hosts
-test ansible_python_interpreter=/usr/local/bin/python2.7
+test ansible_python_interpreter=/usr/local/bin/python3.8
 $ cat mailserver.yml
 ---
 - hosts: test
@@ -83,7 +83,7 @@ $ cat mailserver.yml
    domain: 'foobar.com'
    mail_dir: '/var/vmail'
    mail_user: 'gonzalo'
-   release: '6.6'
+   release: '6.8'
    arch: 'amd64'
    installurl_mirror: 'https://fastly.cdn.openbsd.org/pub/OpenBSD/'
    pkg_path: 'https://fastly.cdn.openbsd.org/pub/OpenBSD/{{ release }}/packages/{{ arch }}/'
@@ -113,7 +113,7 @@ Example Playbook
    domain: 'foobar.com'
    mail_dir: '/var/vmail'
    mail_user: 'gonzalo'
-   release: '6.5'
+   release: '6.8'
    arch: 'amd64'
    installurl_mirror: 'https://fastly.cdn.openbsd.org/pub/OpenBSD/'
    pkg_path: 'https://fastly.cdn.openbsd.org/pub/OpenBSD/{{ release }}/packages/{{ arch }}/'
