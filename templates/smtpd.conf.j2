@@ -2,6 +2,10 @@
 pki {{ domain }} cert		"/etc/ssl/{{ domain }}_fullchain.pem"
 pki {{ domain }} key		"/etc/ssl/private/{{ domain }}_private.pem"
 
+## Since >=6.9 SNI is possible
+#pki another-domain.org cert	"/etc/ssl/another-domain.org_fullchain.pem"
+#pki another-domain.org key	"/etc/ssl/private/another-domain.org_private.pem"
+
 ## Filters
 filter check_dyndns phase connect match rdns regex { '.*\.dyn\..*', '.*\.dsl\..*' } \
 	disconnect "550 no residential connections"
@@ -12,6 +16,9 @@ filter check_rdns phase connect match !rdns \
 filter check_fcrdns phase connect match !fcrdns \
 	disconnect "550 no FCrDNS"
 
+## You can use this, but I suggest to have a close eye
+## to it for a couple busy days, could give a lot of
+## false positive cases
 #filter senderscore \
 #	proc-exec "filter-senderscore -blockBelow 10 -junkBelow 70 -slowFactor 5000"
 
