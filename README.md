@@ -1,7 +1,7 @@
 Ansible role for a Mailserver
 =============================
 
-Ansible role to create a Mailserver on OpenBSD (>=7.0 & -current) with OpenSMTPD, Dovecot and Rspamd.
+Ansible role to create a Mailserver on OpenBSD (>=7.2 & -current) with OpenSMTPD, Dovecot and Rspamd.
 
 Requirements
 ------------
@@ -60,11 +60,7 @@ installed.
 $ doas pkg_add ansible
 ...
 $ cd /tmp && mkdir ansible && cd ansible
-$ cat ~/.ssh/config
-Host cvs.x61.sh
-	Port 2222
-	User anoncvs
-$ cvs -d anoncvs@cvs.x61.sh:/cvs checkout -P ansible-role-mailserver
+$ git clone https://github.com/gonzalo-/ansible-role-mailserver
 ...
 ...
 ...
@@ -83,10 +79,10 @@ $ cat mailserver.yml
    domain: 'foobar.com'
    mail_dir: '/var/vmail'
    mail_user: 'gonzalo'
-   release: '7.0'
+   release: '7.2'
    arch: 'amd64'
-   installurl_mirror: 'https://fastly.cdn.openbsd.org/pub/OpenBSD/'
-   pkg_path: 'https://fastly.cdn.openbsd.org/pub/OpenBSD/{{ release }}/packages/{{ arch }}/'
+   installurl_mirror: 'https://cdn.openbsd.org/pub/OpenBSD/'
+   pkg_path: 'https://cdn.openbsd.org/pub/OpenBSD/{{ release }}/packages/{{ arch }}/'
    packages_list:
     - dovecot
     - dovecot-pigeonhole
@@ -113,7 +109,7 @@ Example Playbook
    domain: 'foobar.com'
    mail_dir: '/var/vmail'
    mail_user: 'gonzalo'
-   release: '7.0'
+   release: '7.2'
    arch: 'amd64'
    installurl_mirror: 'https://cdn.openbsd.org/pub/OpenBSD/'
    pkg_path: 'https://cdn.openbsd.org/pub/OpenBSD/{{ release }}/packages/{{ arch }}/'
