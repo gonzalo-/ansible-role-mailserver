@@ -1,0 +1,9 @@
+allow_username_mismatch = true;
+
+domain {
+	## https://rspamd.com/doc/modules/dkim_signing.html
+	{{ domain }} {
+		path = "/etc/mail/dkim/{{ domain }}.key";
+		selector = "dkim";
+	}
+}

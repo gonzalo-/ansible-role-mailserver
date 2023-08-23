@@ -1,7 +1,7 @@
 Ansible role for a Mailserver
 =============================
 
-Ansible role to create a Mailserver on OpenBSD (>=7.2 & -current) with OpenSMTPD, Dovecot and Rspamd.
+Ansible role to create a Mailserver on OpenBSD (>=7.4 & -current) with OpenSMTPD, Dovecot and Rspamd.
 
 Requirements
 ------------
@@ -11,8 +11,8 @@ OpenBSD, Python 3 (on client machine) and 10 minutes.
 Notes
 -----
 
-This is still a WIP, so far, you need to create DKIM keys, new users and DNS entrys. Also, you need
-to enable dovecot, smtpd, rspamd and dkimproxy_{in,out} at boot.
+This is still a WIP, so far, you need to create DKIM keys with rspamd (https://rspamd.com/doc/modules/dkim_signing.html),
+new users and DNS entries. Also, you need to enable dovecot, smtpd and rspamd at boot.
 
 You need to adjust your pf.conf (example bellow).
 
@@ -79,7 +79,7 @@ $ cat mailserver.yml
    domain: 'foobar.com'
    mail_dir: '/var/vmail'
    mail_user: 'gonzalo'
-   release: '7.2'
+   release: '7.4'
    arch: 'amd64'
    installurl_mirror: 'https://cdn.openbsd.org/pub/OpenBSD/'
    pkg_path: 'https://cdn.openbsd.org/pub/OpenBSD/{{ release }}/packages/{{ arch }}/'
@@ -109,7 +109,7 @@ Example Playbook
    domain: 'foobar.com'
    mail_dir: '/var/vmail'
    mail_user: 'gonzalo'
-   release: '7.2'
+   release: '7.4'
    arch: 'amd64'
    installurl_mirror: 'https://cdn.openbsd.org/pub/OpenBSD/'
    pkg_path: 'https://cdn.openbsd.org/pub/OpenBSD/{{ release }}/packages/{{ arch }}/'
@@ -145,4 +145,4 @@ and then restart dovecot with: ```rcctl restart dovecot```
 Author Information
 ------------------
 
-https://x61.sh/
+https://x61.ar/

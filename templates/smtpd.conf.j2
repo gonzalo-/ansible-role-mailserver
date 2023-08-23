@@ -16,11 +16,8 @@ filter check_rdns phase connect match !rdns \
 filter check_fcrdns phase connect match !fcrdns \
 	disconnect "550 no FCrDNS"
 
-## You can use this, but I suggest to have a close eye
-## to it for a couple busy days, could give a lot of
-## false positive cases
-#filter senderscore \
-#	proc-exec "filter-senderscore -blockBelow 10 -junkBelow 70 -slowFactor 5000"
+filter senderscore \
+	proc-exec "filter-senderscore -blockBelow 10 -junkBelow 70 -slowFactor 5000"
 
 filter rspamd proc-exec "filter-rspamd"
 
@@ -37,7 +34,7 @@ smtp max-message-size 90M
 
 ## Ports
 listen on all tls pki {{ domain }} hostname {{ domain }} \
-        filter { check_dyndns, check_rdns, check_fcrdns, rspamd }
+	filter { check_dyndns, check_rdns, check_fcrdns, senderscore, rspamd }
 listen on all smtps pki {{ domain }} hostname {{ domain }} \
         auth <passwd> filter rspamd
 listen on all port submission tls-require pki {{ domain }} \
@@ -45,11 +42,11 @@ listen on all port submission tls-require pki {{ domain }} \
 
 ## Actions
 action "mda_with_aliases" mda \
-	"/usr/local/bin/rspamc --mime -e '/usr/local/libexec/dovecot/dovecot-lda -f %{sender} -d %{dest}'" \
+	"/usr/local/libexec/dovecot/dovecot-lda -f %{sender} -d %{dest}" \
 	alias <aliases> user vmail
 
 action "mda_with_virtuals" mda \
-	"/usr/local/bin/rspamc --mime -e '/usr/local/libexec/dovecot/dovecot-lda -f %{sender} -d %{dest}'" \
+	"/usr/local/libexec/dovecot/dovecot-lda -f %{sender} -d %{dest}" \
 	virtual <virtuals> user vmail
 
 action "mda_without_rspamd" mda \
